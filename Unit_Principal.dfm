@@ -100,9 +100,9 @@ object FormPrincipal: TFormPrincipal
   end
   object MemoHide: TMemo
     Left = 8
-    Top = 208
+    Top = 203
     Width = 649
-    Height = 177
+    Height = 182
     Lines.Strings = (
       'MemoHide')
     TabOrder = 4
@@ -128,12 +128,10 @@ object FormPrincipal: TFormPrincipal
       item
         Width = 50
       end>
-    ExplicitTop = 444
-    ExplicitWidth = 1010
   end
   object BitBtnSalvar: TBitBtn
     Left = 566
-    Top = 55
+    Top = 86
     Width = 99
     Height = 25
     Anchors = [akTop, akRight]
@@ -160,6 +158,16 @@ object FormPrincipal: TFormPrincipal
     ItemHeight = 13
     TabOrder = 8
     OnClick = ListBoxContagemClick
+  end
+  object BitBtnAjustarLinhas: TBitBtn
+    Left = 566
+    Top = 55
+    Width = 99
+    Height = 25
+    Anchors = [akTop, akRight]
+    Caption = 'Ajustar Linhas'
+    TabOrder = 9
+    OnClick = BitBtnAjustarLinhasClick
   end
   object IdAntiFreeze: TIdAntiFreeze
     Left = 632
