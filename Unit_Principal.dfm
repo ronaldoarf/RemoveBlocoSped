@@ -14,6 +14,7 @@ object FormPrincipal: TFormPrincipal
   KeyPreview = True
   OldCreateOrder = False
   WindowState = wsMaximized
+  OnClose = FormClose
   OnCreate = FormCreate
   OnKeyUp = FormKeyUp
   DesignSize = (
@@ -71,6 +72,7 @@ object FormPrincipal: TFormPrincipal
     ScrollBars = ssBoth
     TabOrder = 2
     WordWrap = False
+    OnChange = MemoLogChange
   end
   object DirectoryListBox1: TDirectoryListBox
     Left = 8
@@ -82,7 +84,7 @@ object FormPrincipal: TFormPrincipal
   end
   object FileListBox1: TFileListBox
     Left = 263
-    Top = 24
+    Top = 27
     Width = 297
     Height = 147
     ItemHeight = 13

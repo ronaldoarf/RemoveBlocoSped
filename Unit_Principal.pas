@@ -34,6 +34,8 @@ type
     procedure ListBoxContagemClick(Sender: TObject);
     procedure BitBtnAjustarLinhasClick(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MemoLogChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     { Private declarations }
   public
@@ -42,6 +44,7 @@ type
 
 var
   FormPrincipal: TFormPrincipal;
+  editado:boolean;
 
 implementation
 
@@ -278,6 +281,7 @@ procedure TFormPrincipal.BitBtnRemoverClick(Sender: TObject);
 var
   I: integer;
   L: Integer;
+  copiar:boolean;
 begin
   if (ListBoxBlocos.Items.Count = 0) then
   begin
@@ -293,19 +297,28 @@ begin
     begin
       StatusBar.Panels[1].Text := 'Processando linha ' + IntToStr(I + 1) + ' de ' + IntToStr(MemoLog.Lines.Count);
       Application.ProcessMessages;
+      copiar := true;
       if (Copy(MemoLog.Lines[I], 1, 1) = '|') and (Copy(MemoLog.Lines[I], 6, 1) = '|') then
       begin
         for L := 0 to ListBoxBlocos.Items.Count -1 do
         begin
           if (ListBoxBlocos.Selected[L]) then
           begin
-            if (Copy(MemoLog.Lines[I], 2, 4) <> ListBoxBlocos.Items[L])
+            if (copiar) and (Copy(MemoLog.Lines[I], 2, 4) <> ListBoxBlocos.Items[L])
             and (Copy(MemoLog.Lines[I], 1, 10) <> '|9900|' + ListBoxBlocos.Items[L]) then
             begin
-              MemoHide.Lines.Add(MemoLog.Lines[I]);
+              copiar := true;
+            end
+            else
+            begin
+              copiar := false;
             end;
           end;
         end;
+      end;
+      if (copiar) then
+      begin
+        MemoHide.Lines.Add(MemoLog.Lines[I]);
       end;
     end;
     MemoLog.Lines.Clear;
@@ -322,6 +335,7 @@ begin
   if  (MessageDlg('O Arquivo será sobrescrito. Você tem certeza que deseja salvar as mudanças?',mtConfirmation,[mbyes,mbno],0)=mryes) then
   begin
     MemoLog.Lines.SaveToFile(FileListBox1.Items.Strings[0]);
+    editado := False;
   end;
 end;
 
@@ -335,18 +349,28 @@ begin
     begin
       if (TFileListBox(Sender).Selected[I]) then
       begin
-        if (FileExists(TFileListBox(Sender).Items.Strings[0])) then
+        if (FileExists(TFileListBox(Sender).Items.Strings[I])) then
         begin
-          MemoLog.Lines.LoadFromFile(TFileListBox(Sender).Items.Strings[0]);
+          MemoLog.Lines.LoadFromFile(TFileListBox(Sender).Items.Strings[I]);
           ListarBlocos;
+          editado := False;
         end;
       end;
     end;
   end;
 end;
 
+procedure TFormPrincipal.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  if (editado) and (MessageDlg('Deseja salvar as mudanças antes de sair?',mtConfirmation,[mbyes,mbno],0)=mryes) then
+  begin
+    MemoLog.Lines.SaveToFile(FileListBox1.Items.Strings[0]);
+  end;
+end;
+
 procedure TFormPrincipal.FormCreate(Sender: TObject);
 begin
+  editado := False;
   MemoLog.Lines.Clear;
   ListBoxBlocos.Clear;
   ListBoxContagem.Clear;
@@ -397,6 +421,11 @@ end;
 procedure TFormPrincipal.ListBoxContagemClick(Sender: TObject);
 begin
   ListBoxBlocos.ItemIndex := ListBoxContagem.ItemIndex;
+end;
+
+procedure TFormPrincipal.MemoLogChange(Sender: TObject);
+begin
+    editado := True;
 end;
 
 end.
