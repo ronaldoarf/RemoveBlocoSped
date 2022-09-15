@@ -11,9 +11,11 @@ object FormPrincipal: TFormPrincipal
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   WindowState = wsMaximized
   OnCreate = FormCreate
+  OnKeyUp = FormKeyUp
   DesignSize = (
     889
     473)
@@ -144,8 +146,12 @@ object FormPrincipal: TFormPrincipal
     Top = 24
     Width = 100
     Height = 147
+    Hint = '0190 0200 0400 0450 C110 C113 C170'
     Anchors = [akTop, akRight]
     ItemHeight = 13
+    MultiSelect = True
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 7
     OnClick = ListBoxBlocosClick
   end

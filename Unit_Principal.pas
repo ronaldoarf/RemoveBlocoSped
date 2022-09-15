@@ -33,6 +33,7 @@ type
     procedure ListBoxBlocosClick(Sender: TObject);
     procedure ListBoxContagemClick(Sender: TObject);
     procedure BitBtnAjustarLinhasClick(Sender: TObject);
+    procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
     { Private declarations }
   public
@@ -259,7 +260,6 @@ begin
       {bloco 9  9900}
       if (Copy(MemoLog.Lines[I],2,9) = '9900|9900') then
       begin
-        showmessage('aqui');
         MemoLog.Lines[I] := '|9900|9900|' + ListBoxContagem.Items[ListBoxBlocos.Items.IndexOf('9900')] + '|';
       end
       {bloco 9 9900}
@@ -277,10 +277,11 @@ end;
 procedure TFormPrincipal.BitBtnRemoverClick(Sender: TObject);
 var
   I: integer;
+  L: Integer;
 begin
-  if (ListBoxBlocos.ItemIndex = -1) then
+  if (ListBoxBlocos.Items.Count = 0) then
   begin
-    ShowMessage('Selecione um bloco na lista.');
+    ShowMessage('Selecione ao menos um bloco na lista.');
   end
   else
   if (MessageDlg('Você tem certeza que deseja excluir o bloco?',mtConfirmation,[mbyes,mbno],0)=mryes) then
@@ -294,18 +295,25 @@ begin
       Application.ProcessMessages;
       if (Copy(MemoLog.Lines[I], 1, 1) = '|') and (Copy(MemoLog.Lines[I], 6, 1) = '|') then
       begin
-        if (Copy(MemoLog.Lines[I], 2, 4) <> ListBoxBlocos.Items[ListBoxBlocos.ItemIndex]) and (Copy(MemoLog.Lines[I], 1, 10) <> '|9900|' + ListBoxBlocos.Items[ListBoxBlocos.ItemIndex]) then
+        for L := 0 to ListBoxBlocos.Items.Count -1 do
         begin
-          MemoHide.Lines.Add(MemoLog.Lines[I]);
+          if (ListBoxBlocos.Selected[L]) then
+          begin
+            if (Copy(MemoLog.Lines[I], 2, 4) <> ListBoxBlocos.Items[L])
+            and (Copy(MemoLog.Lines[I], 1, 10) <> '|9900|' + ListBoxBlocos.Items[L]) then
+            begin
+              MemoHide.Lines.Add(MemoLog.Lines[I]);
+            end;
+          end;
         end;
       end;
     end;
     MemoLog.Lines.Clear;
     MemoLog.Lines := MemoHide.Lines;
     ListarBlocos();
+    BitBtnAjustarLinhasClick(BitBtnAjustarLinhas);
     StatusBar.Panels[1].Text := '';
     Application.ProcessMessages;
-    Showmessage('Bloco Removido');
   end;
 end;
 
@@ -344,6 +352,15 @@ begin
   ListBoxContagem.Clear;
 end;
 
+
+procedure TFormPrincipal.FormKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Shift = [ssCtrl]) and (Key = Ord('S')) then
+  begin
+    BitBtnSalvarClick(BitBtnSalvar);
+  end;
+end;
 
 procedure TFormPrincipal.ListarBlocos;
 var
