@@ -400,6 +400,17 @@ begin
       begin
         ListBoxBlocos.Items.Add(Copy(MemoLog.Lines[I], 2, 4));
         ListBoxContagem.Items.Add('1');
+        Application.ProcessMessages;
+        if (Copy(MemoLog.Lines[I], 2, 4) = '0190')
+        or (Copy(MemoLog.Lines[I], 2, 4) = '0200')
+        or (Copy(MemoLog.Lines[I], 2, 4) = '0400')
+        or (Copy(MemoLog.Lines[I], 2, 4) = '0450')
+        or (Copy(MemoLog.Lines[I], 2, 4) = 'C110')
+        or (Copy(MemoLog.Lines[I], 2, 4) = 'C113')
+        or (Copy(MemoLog.Lines[I], 2, 4) = 'C170') then
+        begin
+          ListBoxBlocos.Selected[ListBoxBlocos.Items.IndexOf(Copy(MemoLog.Lines[I], 2, 4))] := True;
+        end;
       end
       else
       begin

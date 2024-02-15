@@ -145,7 +145,7 @@ object FormPrincipal: TFormPrincipal
   end
   object ListBoxBlocos: TListBox
     Left = 671
-    Top = 24
+    Top = 27
     Width = 100
     Height = 147
     Hint = '0190 0200 0400 0450 C110 C113 C170'
